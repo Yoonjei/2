@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>우리 반 학급 관리</title>
+
+  <style>
+    body {
+      font-family: "맑은 고딕", sans-serif;
+      background-color: #f4f6f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #4a90e2;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 900px;
+      margin: 30px auto;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #357abd;
+    }
+
+    .post {
+      border-top: 1px solid #ddd;
+      padding-top: 15px;
+      margin-top: 15px;
+    }
+
+    .post img {
+      max-width: 200px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+
+    .student-name {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .date {
+      color: gray;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>📚 우리 반 학급 관리 홈페이지</h1>
+    <p>학생 활동 게시판</p>
+  </header>
+
+  <div class="container">
+
+    <!-- 글 작성 -->
+    <div class="card">
+      <h2>✏️ 글쓰기</h2>
+
+      <input type="text" id="name" placeholder="학생 이름 입력">
+
+      <textarea id="content" rows="5" placeholder="내용을 입력하세요"></textarea>
+
+      <input type="file" id="imageInput" accept="image/*">
+
+      <button onclick="addPost()">등록하기</button>
+    </div>
+
+    <!-- 게시글 목록 -->
+    <div class="card">
+      <h2>📋 게시글 목록</h2>
+
+      <div id="postList"></div>
+    </div>
+
+  </div>
+
+  <script>
+    function addPost() {
+      const name = document.getElementById("name").value;
+      const content = document.getElementById("content").value;
+      const imageInput = document.getElementById("imageInput");
+
+      if (name === "" || content === "") {
+        alert("이름과 내용을 입력해주세요.");
+        return;
+      }
+
+      const postList = document.getElementById("postList");
+
+      const postDiv = document.createElement("div");
+      postDiv.className = "post";
+
+      const now = new Date();
+      const dateString = now.toLocaleString();
+
+      let imageHTML = "";
+
+      if (imageInput.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+          imageHTML = `<img src="${e.target.result}" alt="학생 사진">`;
+
+          postDiv.innerHTML = `
+            <div class="student-name">${name}</div>
+            <div class="date">${dateString}</div>
+            <p>${content}</p>
+            ${imageHTML}
+          `;
+
+          postList.prepend(postDiv);
+        };
+
+        reader.readAsDataURL(imageInput.files[0]);
+
+      } else {
+        postDiv.innerHTML = `
+          <div class="student-name">${name}</div>
+          <div class="date">${dateString}</div>
+          <p>${content}</p>
+        `;
+
+        postList.prepend(postDiv);
+      }
+
+      // 입력 초기화
+      document.getElementById("name").value = "";
+      document.getElementById("content").value = "";
+      document.getElementById("imageInput").value = "";
+    }
+  </script>
+
+</body>
+</html>
